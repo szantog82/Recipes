@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Recept feltöltő</title>
+  
+  
+  <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css'>
+
+  
+  
+</head>
+
+<body>
+  <h1>Recept feltöltő</h1>
+<div class="container">
+<form action="https://plausible-chatter.glitch.me/" method="POST">
+  <input type="text" class="form-control input-lg" name="name" placeholder="Név..."><br>
+  <select class="form-control" name="season" multiple>
+  <option value="winter">Téli</option>
+  <option value="summer">nyári</option>
+</select><br>
+  <select class="form-control" name="type" multiple>
+  <option value="soup">Leves</option>
+  <option value="salat">Saláta</option>
+    <option value="onedish">Egytálétel</option>
+    <option value="main">Főétel</option>
+    <option value="dessert">Desszert</option>
+    <option value="pate">Pástétom</option>
+</select><br>
+  Tejterméket tartalmaz-e: <input type="checkbox" name="dairy"><br>
+  <input type="text" class="form-control" name="ingredients" placeholder="Összetevők vesszővel elválasztva"><br>
+  <textarea name="description" class="form-control input-lg" placeholder="Leírás"></textarea><br>
+  <input type="password" class="form-control" name="password" placeholder="Jelszó"><br>
+  <button class="btn btn-success" type="submit">Küldés</button>
+</form>
+</div>
+  
+  
+</body>
+</html>
