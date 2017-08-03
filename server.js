@@ -24,6 +24,16 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
+app.get("/getrecipes", function (req, res) {
+  mongoose.connect('mongodb://' + process.env.LOGIN + ':' + process.env.PWD + '@ds033966.mlab.com:33966/szantog82');
+  var db = mongoose.connection.collection('Recipes');
+  db.find({}, function(err, data){
+    data.toArray(function(err2, items){
+      res.send(JSON.stringify(items));
+    })
+  })
+});
+
 app.post("/", function (req, res) {
   var body = req.body;
   if (bcrypt.compareSync(body.password, process.env.SECRET)) {
@@ -37,8 +47,11 @@ app.post("/", function (req, res) {
     upload.description = body.description;
     console.log(body.name + " is uploading to db...");
     mongoose.connect('mongodb://' + process.env.LOGIN + ':' + process.env.PWD + '@ds033966.mlab.com:33966/szantog82');
-    var db = mongoose.connection;
-    db.collection('Recipes').insert(upload);
+    var db = mongoose.connection.collection('Recipes');
+    //db.collection('Recipes').insert(upload);
+    db.find().toArray(function (err, data){
+      console.log(data);
+    });
     res.writeHead(301,{Location: '/'});
     res.end();
   }
