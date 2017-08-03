@@ -50,7 +50,7 @@ app.post("/", function (req, res) {
     console.log(body.name + " is uploading to db...");
     mongoose.connect(uri);
     var db = mongoose.connection.collection('Recipes');
-    db.collection('Recipes').insert(upload);
+    db.insert(upload);
     res.writeHead(301,{Location: '/'});
     res.end();
   }
