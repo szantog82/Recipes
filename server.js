@@ -9,6 +9,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(express.static('public'));
 
+var uri = "mongodb://" + process.env.PASS + "@ds033966.mlab.com:33966/szantog82";
 var recipeSchema = mongoose.Schema({
         name: String,
         season: String,
@@ -26,7 +27,7 @@ app.get("/", function (req, res) {
 
 app.get("/getrecipes", function (req, res) {
         console.log("Fetching recipes...");
-  mongoose.connect('mongodb://' + process.env.LOGIN + ':' + process.env.PWD + '@ds033966.mlab.com:33966/szantog82');
+  mongoose.connect(uri);
   var db = mongoose.connection.collection('Recipes');
   db.find({}, function(err, data){
     data.toArray(function(err2, items){
@@ -47,7 +48,7 @@ app.post("/", function (req, res) {
     upload.ingredients = ingredientsArray;
     upload.description = body.description;
     console.log(body.name + " is uploading to db...");
-    mongoose.connect('mongodb://' + process.env.LOGIN + ':' + process.env.PWD + '@ds033966.mlab.com:33966/szantog82');
+    mongoose.connect(uri);
     var db = mongoose.connection.collection('Recipes');
     //db.collection('Recipes').insert(upload);
     db.find().toArray(function (err, data){
