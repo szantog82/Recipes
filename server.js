@@ -25,6 +25,7 @@ app.get("/", function (req, res) {
 });
 
 app.get("/getrecipes", function (req, res) {
+        console.log("Fetching recipes...");
   mongoose.connect('mongodb://' + process.env.LOGIN + ':' + process.env.PWD + '@ds033966.mlab.com:33966/szantog82');
   var db = mongoose.connection.collection('Recipes');
   db.find({}, function(err, data){
