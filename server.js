@@ -86,7 +86,7 @@ app.post("/setweeklymenu", function(req, res){
   var bodyText = Object.keys(req.body)[0];
   var body = JSON.parse(bodyText);
   console.log(body.password);
-  if (bcrypt.compareSync(body.password, process.env.SECRET)) {
+  if (bcrypt.compareSync(body.password, process.env.SECRETWEEKLY)) {
     console.log("siker")
     var upload = new WeeklyMenu();
     upload.monday = body.monday;
