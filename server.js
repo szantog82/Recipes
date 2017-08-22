@@ -19,7 +19,18 @@ var recipeSchema = mongoose.Schema({
         description: String  
 });
 
+var weeklyMenuSchema = mongoose.Schema({
+        monday: String,
+        tuesday: String,
+        wednesday: String,
+        thursday: String,
+        friday: String,
+        saturday: String,
+        sunday: String
+});
+
 var Recipe = mongoose.model('Recipe', recipeSchema);
+var WeeklyMenu = mongoose.model('WeeklyMenu', weeklyMenuSchema);
 
 app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
@@ -27,13 +38,13 @@ app.get("/", function (req, res) {
 
 app.get("/getrecipes", function (req, res) {
         console.log("Fetching recipes...");
-  mongoose.connect(uri);
-  var db = mongoose.connection.collection('Recipes');
-  db.find({}, function(err, data){
-    data.toArray(function(err2, items){
-      res.send(JSON.stringify(items));
-    })
-  })
+        mongoose.connect(uri);
+        var db = mongoose.connection.collection('Recipes');
+        db.find({}, function(err, data){
+            data.toArray(function(err2, items){
+                res.send(JSON.stringify(items));
+                })
+            })
 });
 
 app.post("/", function (req, res) {
@@ -53,6 +64,46 @@ app.post("/", function (req, res) {
     db.insert(upload);
     res.writeHead(301,{Location: '/'});
     res.end();
+  }
+  else {
+    res.send("Rossz jelszó");
+  }
+});
+
+app.get("/getweeklymenu", function(req, res){
+    console.log("Fetching weekly menu...");
+    mongoose.connect(uri);
+        var db = mongoose.connection.collection('WeeklyMenu');
+        db.find({}, function(err, data){
+            data.toArray(function(err2, items){
+                res.send(JSON.stringify(items[0]));
+                })
+            })
+});
+
+app.post("/setweeklymenu", function(req, res){
+  console.log("SetWeeklyMenu post action received")
+  var bodyText = Object.keys(req.body)[0];
+  var body = JSON.parse(bodyText);
+  console.log(body.password);
+  if (bcrypt.compareSync(body.password, process.env.SECRET)) {
+    console.log("siker")
+    var upload = new WeeklyMenu();
+    upload.monday = body.monday;
+    upload.tuesday = body.tuesday;
+    upload.wednesday = body.wednesday;
+    upload.thursday = body.thursday;
+    upload.friday = body.friday;
+    upload.saturday = body.saturday;
+    upload.sunday = body.sunday;
+    console.log("WeeklyMenu is uploading to db...");
+    console.log(upload)
+    mongoose.connect(uri);
+    var db = mongoose.connection.collection('WeeklyMenu');
+    db.remove({}, function (err, sc){
+              db.insert(upload);
+        res.end("success");
+              });
   }
   else {
     res.send("Rossz jelszó");
