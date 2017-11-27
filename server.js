@@ -113,7 +113,7 @@ app.get("/getprevmenus", function(req, res) {
     db.find().sort({
         "time": 1
     }).toArray(function(err2, items) {
-        res.send(items);
+        res.send(JSON.stringify(items));
     })
 });
 
