@@ -101,6 +101,22 @@ app.get("/getweeklymenu", function(req, res) {
     })
 });
 
+app.get("/getprevmenus", function(req, res) {
+    console.log("Fetching weekly menu...");
+    mongoose.connect(uri, {
+        useMongoClient: true,
+        socketTimeoutMS: 0,
+        keepAlive: true,
+        reconnectTries: 30
+    });
+    var db = mongoose.connection.collection('WeeklyMenu');
+    db.find().sort({
+        "time": 1
+    }).toArray(function(err2, items) {
+        res.send(items);
+    })
+});
+
 app.post("/setweeklymenu", function(req, res) {
     console.log("SetWeeklyMenu post action received")
     var bodyText = Object.keys(req.body)[0];
