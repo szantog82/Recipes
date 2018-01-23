@@ -30,6 +30,13 @@ var weeklyMenuSchema = mongoose.Schema({
     friday: String,
     saturday: String,
     sunday: String,
+    mondayDinner: String,
+    tuesdayDinner: String,
+    wednesdayDinner: String,
+    thursdayDinner: String,
+    fridayDinner: String,
+    saturdayDinner: String,
+    sundayDinner: String,
     time: Long
 });
 
@@ -132,6 +139,13 @@ app.post("/setweeklymenu", function(req, res) {
         upload.friday = body.friday;
         upload.saturday = body.saturday;
         upload.sunday = body.sunday;
+        upload.mondayDinner = body.mondayDinner;
+        upload.tuesdayDinner = body.tuesdayDinner;
+        upload.wednesdayDinner = body.wednesdayDinner;
+        upload.thursdayDinner = body.thursdayDinner;
+        upload.fridayDinner = body.fridayDinner;
+        upload.saturdayDinner = body.saturdayDinner;
+        upload.sundayDinner = body.sundayDinner;
         upload.time = parseInt(body.time);
         console.log("WeeklyMenu is uploading to db...");
         console.log(upload);
