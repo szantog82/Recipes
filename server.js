@@ -50,7 +50,6 @@ app.get("/", function(req, res) {
 app.get("/getrecipes", function(req, res) {
     console.log("Fetching recipes...");
     mongoose.connect(uri, {
-        useMongoClient: true,
         socketTimeoutMS: 0,
         keepAlive: true,
         reconnectTries: 30
@@ -76,7 +75,6 @@ app.post("/", function(req, res) {
         upload.description = body.description;
         console.log(body.name + " is uploading to db...");
         mongoose.connect(uri, {
-            useMongoClient: true,
             socketTimeoutMS: 0,
             keepAlive: true,
             reconnectTries: 30
@@ -95,7 +93,6 @@ app.post("/", function(req, res) {
 app.get("/getweeklymenu", function(req, res) {
     console.log("Fetching weekly menu...");
     mongoose.connect(uri, {
-        useMongoClient: true,
         socketTimeoutMS: 0,
         keepAlive: true,
         reconnectTries: 30
@@ -111,7 +108,6 @@ app.get("/getweeklymenu", function(req, res) {
 app.get("/getprevmenus", function(req, res) {
     console.log("Fetching weekly menu...");
     mongoose.connect(uri, {
-        useMongoClient: true,
         socketTimeoutMS: 0,
         keepAlive: true,
         reconnectTries: 30
@@ -150,7 +146,6 @@ app.post("/setweeklymenu", function(req, res) {
         console.log("WeeklyMenu is uploading to db...");
         console.log(upload);
         mongoose.connect(uri, {
-            useMongoClient: true,
             socketTimeoutMS: 0,
             keepAlive: true,
             reconnectTries: 30
@@ -167,14 +162,13 @@ app.post("/financebackup", function(req, res) {
     console.log("FinanceBackup post action received")
     var bodyText = Object.keys(req.body)[0];
     var body = JSON.parse(bodyText);
-    var upload = new WeeklyMenu();
 
     if (bcrypt.compareSync(body.password, process.env.SECRETWEEKLY)) {
-        var upload = body.balance;
+        var upload = {};
+        upload["balance"] = body.balance;
         
         console.log("FinanceBackup is uploading to db...");
         mongoose.connect(uri, {
-            useMongoClient: true,
             socketTimeoutMS: 0,
             keepAlive: true,
             reconnectTries: 30
