@@ -163,6 +163,29 @@ app.post("/setweeklymenu", function(req, res) {
     }
 });
 
+app.post("/financebackup", function(req, res) {
+    console.log("FinanceBackup post action received")
+    var bodyText = Object.keys(req.body)[0];
+    var body = JSON.parse(bodyText);
+    var upload = new WeeklyMenu();
+
+    if (bcrypt.compareSync(body.password, process.env.SECRETWEEKLY)) {
+        var upload = body.balance;
+        
+        console.log("FinanceBackup is uploading to db...");
+        mongoose.connect(uri, {
+            useMongoClient: true,
+            socketTimeoutMS: 0,
+            keepAlive: true,
+            reconnectTries: 30
+        });
+        var db = mongoose.connection.collection('FinanceBackup');
+        db.insert(upload);
+        res.end("success");
+    } else {
+        res.send("Rossz jelszó");
+    }
+});
 
 var listener = app.listen(process.env.PORT, function() {
     console.log('Your app is listening on port ' + listener.address().port);
