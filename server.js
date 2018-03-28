@@ -165,8 +165,10 @@ app.post("/financebackup", function(req, res) {
 
     if (bcrypt.compareSync(body.password, process.env.SECRETWEEKLY)) {
         var upload = {};
+        upload["username"] = body.username;
+        upload["initialbalance"] = body.initialbalance;
         upload["balance"] = body.balance;
-        
+        upload["categorylist"] = body.categorylist;
         console.log("FinanceBackup is uploading to db...");
         mongoose.connect(uri, {
             socketTimeoutMS: 0,
