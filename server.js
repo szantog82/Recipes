@@ -169,6 +169,7 @@ app.post("/financebackup", function(req, res) {
         upload["initialbalance"] = body.initialbalance;
         upload["balance"] = body.balance;
         upload["categorylist"] = body.categorylist;
+        upload["repetitivedata"] = body.repetitivedata;
         console.log("FinanceBackup is uploading to db...");
         mongoose.connect(uri, {
             socketTimeoutMS: 0,
