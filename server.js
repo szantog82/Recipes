@@ -84,7 +84,7 @@ app.post("/", function(req, res) {
         res.writeHead(301, {
             Location: '/'
         });
-        res.end();
+        res.end("success");
     } else {
         res.send("Rossz jelszó");
     }
