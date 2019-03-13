@@ -64,7 +64,7 @@ app.get("/getrecipes", function(req, res) {
 
 app.post("/", function(req, res) {
     var body = req.body;
-    if (bcrypt.compareSync(body.password, process.env.SECRET)) {
+    if (bcrypt.compareSync(body.password, process.env.SECRET) || bcrypt.compareSync(body.password, process.env.SECRETWEEKLY)) {
         var upload = new Recipe();
         var ingredientsArray = body.ingredients.split(', ');
         upload.name = body.name;
