@@ -190,6 +190,33 @@ app.post("/financebackup", function(req, res) {
     }
 });
 
+app.post("/getfinancebackup", function(req, res){
+  console.log("GetfinanceBackup post action received")
+    var bodyText = Object.keys(req.body)[0];
+    var body = JSON.parse(bodyText);
+  
+    if (bcrypt.compareSync(body.password, process.env.SECRETWEEKLY)) {
+        mongoose.connect(uri, {
+          socketTimeoutMS: 0,
+          keepAlive: true,
+          reconnectTries: 30
+        });
+        var db = mongoose.connection.collection('FinanceBackup');
+        db.find({}, function(err, data) {
+            data.toArray(function(err2, items) {
+              items.sort(function(a, b){
+                     if (a.savetime > b.savetime)
+                        return -1;
+                    else return 1;
+                     })
+          res.send(JSON.stringify(items[0]));
+        })
+      })
+    } else {
+      res.send("Rossz jelszó");
+    }
+});
+
 var listener = app.listen(process.env.PORT, function() {
     console.log('Your app is listening on port ' + listener.address().port);
 });
