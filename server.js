@@ -6,7 +6,7 @@ require('mongoose-long')(mongoose);
 var Long = mongoose.Schema.Types.Long;
 var bcrypt = require('bcrypt');
 
-pp.use(bodyParser.urlencoded({
+app.use(bodyParser.urlencoded({
     parameterLimit: 100000,
     limit: '50mb',
     extended: false
