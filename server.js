@@ -185,6 +185,14 @@ app.post("/financebackup", function(req, res) {
             reconnectTries: 30
         });
         var db = mongoose.connection.collection('FinanceBackup');
+        db.find({username: body.username}, function(err, data) {
+            data.toArray(function(err2, items) {
+              var count = items.length;
+              for (var i = 0; i < count; i++){
+                   db.remove({_id: items[i]._id});                
+              }
+            })
+        });
         db.insert(upload);
         res.end("success");
     } else {
