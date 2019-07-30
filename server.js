@@ -176,6 +176,7 @@ app.post("/financebackup", function(req, res) {
         upload["balance"] = body.balance;
         upload["categorylist"] = body.categorylist;
         upload["repetitivedata"] = body.repetitivedata;
+        upload["icons"] = body.icons;
         var d = new Date();
         upload["savetime"] = d.getTime();
         console.log("FinanceBackup is uploading to db...");
