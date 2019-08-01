@@ -174,7 +174,8 @@ app.post("/financebackup", function(req, res) {
         upload["username"] = body.username;
         upload["initialbalance"] = body.initialbalance;
         upload["balance"] = body.balance;
-        upload["categorylist"] = body.categorylist;
+        upload["incomecategorylist"] = body.incomecategorylist;
+        upload["expenditurecategorylist"] = body.expenditurecategorylist;
         upload["repetitivedata"] = body.repetitivedata;
         upload["icons"] = body.icons;
         var d = new Date();
