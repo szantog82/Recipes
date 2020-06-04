@@ -213,8 +213,9 @@ app.post("/getfinancebackup", function(req, res){
           keepAlive: true,
           reconnectTries: 30
         });
+        var username = body.username;
         var db = mongoose.connection.collection('FinanceBackup');
-        db.find({}, function(err, data) {
+        db.find({username: body.username}, function(err, data) {
             data.toArray(function(err2, items) {
               items.sort(function(a, b){
                      if (a.savetime > b.savetime)
