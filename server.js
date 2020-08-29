@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({
 
 app.use(express.static('public'));
 
-var uri = "mongodb://" + process.env.PASS + "@ds033966.mlab.com:33966/szantog82";
+var uri = "mongodb+srv://mongodb:" + process.env.PASS + "@szantog82.1dmlm.mongodb.net/szantog82?retryWrites=true&w=majority";
 var recipeSchema = mongoose.Schema({
     name: String,
     season: String,
