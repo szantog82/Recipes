@@ -14,7 +14,9 @@ app.use(bodyParser.urlencoded({
 
 app.use(express.static('public'));
 
-var uri = "mongodb+srv://mongodb:" + process.env.PASS + "@szantog82.1dmlm.mongodb.net/szantog82?retryWrites=true&w=majority";
+//var uri = "mongodb+srv://mongodb:" + process.env.PASS + "@szantog82.1dmlm.mongodb.net/szantog82?retryWrites=true&w=majority";
+var uri = "mongodb://mongodb:" + process.env.PASS + "@szantog82-shard-00-00.1dmlm.mongodb.net:27017,szantog82-shard-00-01.1dmlm.mongodb.net:27017,szantog82-shard-00-02.1dmlm.mongodb.net:27017/szantog82?ssl=true&replicaSet=atlas-zj6i4v-shard-0&authSource=admin&retryWrites=true&w=majority";
+
 var recipeSchema = mongoose.Schema({
     name: String,
     season: String,
