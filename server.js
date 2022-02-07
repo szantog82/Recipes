@@ -230,6 +230,8 @@ app.post("/anyaeleszto_download_backup", function (req, res) {
         res.send(JSON.stringify(output));
       });
     });
+  } else {
+    res.end();
   }
 });
 
