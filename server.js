@@ -212,6 +212,8 @@ app.post("/anyaeleszto_upload_backup", function (req, res) {
     upload["occassions"] = body["occassions"];
     var d = new Date();
     upload["datetime"] = d.getTime();
+    var db = ConnectToDB("Anyaeleszto");
+    db.insert(upload);
   }
   res.end();
 });
@@ -220,6 +222,7 @@ app.post("/anyaeleszto_download_backup", function (req, res) {
   var pwd = req.body.password;
   if (pwd == process.env.PWD) {
     var db = ConnectToDB("Anyaeleszto");
+    console.log("anyaeleszto download backup request received");
     db.find({}, function (err, data) {
       data.toArray(function (err2, items) {
         items.sort((a, b) => a.datetime < b.datetime);
