@@ -17,6 +17,17 @@ app.use(express.static('public'));
 //var uri = "mongodb+srv://mongodb:" + process.env.PASS + "@szantog82.1dmlm.mongodb.net/szantog82?retryWrites=true&w=majority";
 var uri = "mongodb://mongodb:" + process.env.PASS + "@szantog82-shard-00-00.1dmlm.mongodb.net:27017,szantog82-shard-00-01.1dmlm.mongodb.net:27017,szantog82-shard-00-02.1dmlm.mongodb.net:27017/szantog82?ssl=true&replicaSet=atlas-zj6i4v-shard-0&authSource=admin&retryWrites=true&w=majority";
 
+var ConnectToDB = function(collectionName){
+  mongoose.connect(uri, {
+            socketTimeoutMS: 0,
+            keepAlive: true,
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        });
+        var db = mongoose.connection.collection(collectionName);
+  return db;
+}
+
 var recipeSchema = mongoose.Schema({
     name: String,
     season: String,
@@ -53,12 +64,7 @@ app.get("/", function(req, res) {
 
 app.get("/getrecipes", function(req, res) {
     console.log("Fetching recipes...");
-    mongoose.connect(uri, {
-        socketTimeoutMS: 0,
-        keepAlive: true,
-        reconnectTries: 30
-    });
-    var db = mongoose.connection.collection('Recipes');
+    var db = ConnectToDB("Recipes");
     db.find({}, function(err, data) {
         data.toArray(function(err2, items) {
             res.send(JSON.stringify(items));
@@ -82,12 +88,7 @@ app.post("/", function(req, res) {
         upload.ingredients = ingredientsArray;
         upload.description = body.description;
         console.log(body.name + " is uploading to db...");
-        mongoose.connect(uri, {
-            socketTimeoutMS: 0,
-            keepAlive: true,
-            reconnectTries: 30
-        });
-        var db = mongoose.connection.collection('Recipes');
+        var db = ConnectToDB("Recipes");
         db.insert(upload);
         res.writeHead(301, {
             Location: '/'
@@ -100,12 +101,7 @@ app.post("/", function(req, res) {
 
 app.get("/getweeklymenu", function(req, res) {
     console.log("Fetching weekly menu...");
-    mongoose.connect(uri, {
-        socketTimeoutMS: 0,
-        keepAlive: true,
-        reconnectTries: 30
-    });
-    var db = mongoose.connection.collection('WeeklyMenu');
+    var db = ConnectToDB("WeeklyMenu");
     db.find().sort({
         "time": -1
     }).toArray(function(err2, items) {
@@ -115,12 +111,7 @@ app.get("/getweeklymenu", function(req, res) {
 
 app.get("/getprevmenus", function(req, res) {
     console.log("Fetching weekly menu...");
-    mongoose.connect(uri, {
-        socketTimeoutMS: 0,
-        keepAlive: true,
-        reconnectTries: 30
-    });
-    var db = mongoose.connection.collection('WeeklyMenu');
+    var db = ConnectToDB("WeeklyMenu");
     db.find().sort({
         "time": 1
     }).toArray(function(err2, items) {
@@ -153,12 +144,7 @@ app.post("/setweeklymenu", function(req, res) {
         upload.time = parseInt(body.time);
         console.log("WeeklyMenu is uploading to db...");
         console.log(upload);
-        mongoose.connect(uri, {
-            socketTimeoutMS: 0,
-            keepAlive: true,
-            reconnectTries: 30
-        });
-        var db = mongoose.connection.collection('WeeklyMenu');
+        var db = ConnectToDB("WeeklyMenu");
         db.insert(upload);
         res.end("success");
     } else {
@@ -183,12 +169,7 @@ app.post("/financebackup", function(req, res) {
         var d = new Date();
         upload["savetime"] = d.getTime();
         console.log("FinanceBackup is uploading to db...");
-        mongoose.connect(uri, {
-            socketTimeoutMS: 0,
-            keepAlive: true,
-            reconnectTries: 30
-        });
-        var db = mongoose.connection.collection('FinanceBackup');
+        var db = ConnectToDB("FinanceBackup");
         db.remove({username: body.username});                
         db.insert(upload);
         res.end("success");
@@ -203,13 +184,8 @@ app.post("/getfinancebackup", function(req, res){
     var body = JSON.parse(bodyText);
   
     if (bcrypt.compareSync(body.password, process.env.SECRETWEEKLY)) {
-        mongoose.connect(uri, {
-          socketTimeoutMS: 0,
-          keepAlive: true,
-          reconnectTries: 30
-        });
         var username = body.username;
-        var db = mongoose.connection.collection('FinanceBackup');
+        var db = ConnectToDB("FinanceBackup");
         db.find({username: body.username}, function(err, data) {
             data.toArray(function(err2, items) {
               items.sort(function(a, b){
@@ -235,12 +211,7 @@ app.post("/anyaeleszto_upload_backup", function(req, res){
   var d = new Date();
   upload["datetime"] = d.getTime();
     console.log("Anyaeleszto backup is uploading to db...");
-        mongoose.connect(uri, {
-            socketTimeoutMS: 0,
-            keepAlive: true,
-            reconnectTries: 30
-        });
-        var db = mongoose.connection.collection('Anyaeleszto'); 
+        var db = ConnectToDB("Anyaeleszto");
         db.insert(upload);
   res.end();
 })
