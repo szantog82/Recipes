@@ -210,9 +210,9 @@ app.post("/anyaeleszto_upload_backup", function(req, res){
   upload["occassions"] = body["occassions"];
   var d = new Date();
   upload["datetime"] = d.getTime();
-    console.log("Anyaeleszto backup is uploading to db...");
-        var db = ConnectToDB("Anyaeleszto");
-        db.insert(upload);
+  console.log("Anyaeleszto backup is uploading to db...");
+  var db = ConnectToDB("Anyaeleszto");
+  db.insert(upload);
   res.end();
 })
 
