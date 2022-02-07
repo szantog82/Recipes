@@ -220,7 +220,7 @@ app.post("/anyaeleszto_upload_backup", function (req, res) {
 
 app.post("/anyaeleszto_download_backup", function (req, res) {
   var pwd = req.body.password;
-  if (pwd == process.env.PWD) {
+  if (pwd == process.env.PASSWD) {
     var db = ConnectToDB("Anyaeleszto");
     console.log("anyaeleszto download backup request received");
     db.find({}, function (err, data) {
