@@ -231,7 +231,7 @@ app.post("/anyaeleszto_download_backup", function (req, res) {
       });
     });
   } else {
-    res.end(pwd + " " + process.env.PWD);
+    res.end();
   }
 });
 
