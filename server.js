@@ -201,20 +201,34 @@ app.post("/getfinancebackup", function(req, res){
     }
 });
 
-app.post("/anyaeleszto_upload_backup", function(req, res){
-  var data = req.body.data;
-  var body = JSON.parse(data);
-  console.log("anyaeleszto upload backup received");
-  var upload = {};
-  upload["clients"] = body["clients"];
-  upload["occassions"] = body["occassions"];
-  var d = new Date();
-  upload["datetime"] = d.getTime();
-  console.log("Anyaeleszto backup is uploading to db...");
-  var db = ConnectToDB("Anyaeleszto");
-  db.insert(upload);
+app.post("/anyaeleszto_upload_backup", function (req, res) {
+  var pwd = req.body.password;
+  if (pwd == process.env.PWD) {
+    var data = req.body.data;
+    var body = JSON.parse(data);
+    console.log("anyaeleszto upload backup received");
+    var upload = {};
+    upload["clients"] = body["clients"];
+    upload["occassions"] = body["occassions"];
+    var d = new Date();
+    upload["datetime"] = d.getTime();
+  }
   res.end();
-})
+});
+
+app.post("/anyaeleszto_download_backup", function (req, res) {
+  var pwd = req.body.password;
+  if (pwd == process.env.PWD) {
+    var db = ConnectToDB("Anyaeleszto");
+    db.find({}, function (err, data) {
+      data.toArray(function (err2, items) {
+        items.sort((a, b) => a.datetime < b.datetime);
+        var output = items.slice(0, 3);
+        res.send(JSON.stringify(output));
+      });
+    });
+  }
+});
 
 var listener = app.listen(process.env.PORT, function() {
     console.log('Your app is listening on port ' + listener.address().port);
