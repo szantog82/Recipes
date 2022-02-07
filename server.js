@@ -225,6 +225,26 @@ app.post("/getfinancebackup", function(req, res){
     }
 });
 
+app.post("/anyaeleszto_upload_backup", function(req, res){
+  var data = req.body.data;
+  var body = JSON.parse(data);
+  console.log("anyaeleszto upload backup received");
+  var upload = {};
+  upload["clients"] = body["clients"];
+  upload["occassions"] = body["occassions"];
+  var d = new Date();
+  upload["datetime"] = d.getTime();
+    console.log("Anyaeleszto backup is uploading to db...");
+        mongoose.connect(uri, {
+            socketTimeoutMS: 0,
+            keepAlive: true,
+            reconnectTries: 30
+        });
+        var db = mongoose.connection.collection('Anyaeleszto'); 
+        db.insert(upload);
+  res.end();
+})
+
 var listener = app.listen(process.env.PORT, function() {
     console.log('Your app is listening on port ' + listener.address().port);
 });
