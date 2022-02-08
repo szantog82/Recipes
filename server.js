@@ -208,8 +208,8 @@ app.post("/anyaeleszto_upload_backup", function (req, res) {
     var body = JSON.parse(data);
     console.log("anyaeleszto upload backup received");
     var upload = {};
-    upload["clients"] = body["clients"];
-    upload["occassions"] = body["occassions"];
+    upload["clients"] = JSON.parse(body["clients"]);
+    upload["occassions"] = JSON.parse(body["occassions"]);
     var d = new Date();
     upload["datetime"] = d.getTime();
     var db = ConnectToDB("Anyaeleszto");
