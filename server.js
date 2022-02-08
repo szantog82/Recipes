@@ -227,7 +227,7 @@ app.post("/anyaeleszto_download_backup", function (req, res) {
       data.toArray(function (err2, items) {
         items.sort((a, b) => a.datetime < b.datetime);
         var output = items.slice(0, 3);
-        res.send(JSON.stringify(output));
+        res.send(output);
       });
     });
   } else {
