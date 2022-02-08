@@ -225,7 +225,9 @@ app.post("/anyaeleszto_download_backup", function (req, res) {
     console.log("anyaeleszto download backup request received");
     db.find({}, function (err, data) {
       data.toArray(function (err2, items) {
-        items.sort((a, b) => a.datetime < b.datetime);
+        items.sort(function compare(a, b) {
+          return b.datetime - a.datetime;
+        });
         var output = items.slice(0, 3);
         res.send(output);
       });
