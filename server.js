@@ -203,7 +203,7 @@ app.post("/getfinancebackup", function(req, res){
 
 app.post("/anyaeleszto_upload_backup", function (req, res) {
   var pwd = req.body.password;
-  if (pwd == process.env.PWD) {
+  if (pwd == process.env.PASSWD) {
     var data = req.body.data;
     var body = JSON.parse(data);
     console.log("anyaeleszto upload backup received");
