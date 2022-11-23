@@ -168,12 +168,13 @@ app.post("/financebackup", function(req, res) {
         upload["icons"] = body.icons;
         var d = new Date();
         upload["savetime"] = d.getTime();
-        console.log("FinanceBackup is uploading to db...");
+        console.log("FinanceBackup is uploading to db..., username: " + body.username);
         var db = ConnectToDB("FinanceBackup");
         db.remove({username: body.username});                
         db.insert(upload);
         res.end("success");
     } else {
+        console.log("Wrong password in /financebackup !");
         res.send("Rossz jelszó");
     }
 });
@@ -186,6 +187,7 @@ app.post("/getfinancebackup", function(req, res){
     if (bcrypt.compareSync(body.password, process.env.SECRETWEEKLY)) {
         var username = body.username;
         var db = ConnectToDB("FinanceBackup");
+        console.log("Fetching FinanceBackup data for user " + username);
         db.find({username: body.username}, function(err, data) {
             data.toArray(function(err2, items) {
               items.sort(function(a, b){
@@ -197,6 +199,7 @@ app.post("/getfinancebackup", function(req, res){
         })
       })
     } else {
+      console.log("Wrong password in /getfinancebackup !");
       res.send("Rossz jelszó");
     }
 });
