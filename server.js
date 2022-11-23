@@ -182,7 +182,7 @@ app.post("/financebackup", function (req, res) {
             }
           });
         });
-        db.insertMany(upload).then(function(){console.log("finance data inserted")}).catch(function(err){console.log("Error inserting finance data to db!" + err)});   
+        db.insertOne(upload).then(function(){console.log("finance data inserted")}).catch(function(err){console.log("Error inserting finance data to db!" + err)});   
     
     res.end("success");
   } else {
