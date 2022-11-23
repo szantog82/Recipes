@@ -198,7 +198,7 @@ app.post("/getfinancebackup", function(req, res){
     var bodyText = Object.keys(req.body)[0];
     var body = JSON.parse(bodyText);
   
-    if (bcrypt.compareSync(body.password, process.env.SECRETWEEKLY)) {
+    if (body.password == process.env.SECRETWEEKLY) {
         var username = body.username;
         var db = ConnectToDB("FinanceBackup");
         console.log("Fetching FinanceBackup data for user " + username);
