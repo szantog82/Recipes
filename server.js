@@ -154,7 +154,8 @@ app.post("/setweeklymenu", function(req, res) {
 
 app.post("/financebackup", function (req, res) {
   console.log("FinanceBackup post action received");
-  var body = req.body;
+  var bodyText = Object.keys(req.body)[0];
+   var body = JSON.parse(bodyText);
 
   if (body.password == process.env.SECRETWEEKLY) {
     var upload = {};
