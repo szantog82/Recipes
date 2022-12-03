@@ -218,6 +218,49 @@ app.post("/getfinancebackup", function(req, res){
     }
 });
 
+app.post("/financebackupnew", function (req, res) {
+  console.log("FinanceBackup post action received");
+  var bodyText = Object.keys(req.body)[0];
+   var body = JSON.parse(bodyText);
+
+  if (body.password == process.env.SECRETWEEKLY) {
+    var upload = {};
+    upload["username"] = body.username;
+    upload["initialbalance"] = body.initialbalance;
+    upload["balance"] = body.balance;
+    upload["incomecategorylist"] = body.incomecategorylist;
+    upload["expenditurecategorylist"] = body.expenditurecategorylist;
+    upload["repetitivedata"] = body.repetitivedata;
+    upload["icons"] = body.icons;
+    upload["pockets"] = body.pockets;
+    upload["initialBalances"] = body.initialBalances;
+    var d = new Date();
+    upload["savetime"] = d.getTime();
+    console.log("FinanceBackup is uploading to db..., username: " + body.username);
+    mongoose.connect(uri, {
+      socketTimeoutMS: 0,
+      keepAlive: true,
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
+    var db = mongoose.connection.collection("FinanceBackup");
+        db.find({ username: body.username }, function (err, data) {
+          data.toArray(function (err2, items) {
+            var count = items.length;
+            for (var i = 0; i < count; i++) {
+              db.removeMany({ _id: items[i]._id });
+            }
+          });
+        });
+        db.insertOne(upload).then(function(){console.log("finance data inserted")}).catch(function(err){console.log("Error inserting finance data to db!" + err)});   
+    
+    res.end("success");
+  } else {
+    console.log("Wrong password in /financebackup !");
+    res.send("Rossz jelszó");
+  }
+});
+
 app.post("/anyaeleszto_upload_backup", function (req, res) {
   var pwd = req.body.password;
   if (pwd == process.env.PASSWD) {
