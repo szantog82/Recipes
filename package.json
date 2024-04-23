@@ -8,7 +8,7 @@
   "dependencies": {
     "express": "^4.15.4",
     "body-parser": "^1.18.0",
-    "mongoose": "=5.9.29",
+    "mongoose": "=5.13.20",
     "bcrypt": ">=5.0.0",
     "mongoose-long": "^0.1.1"
   },
