@@ -158,34 +158,32 @@ app.post("/financebackup", function (req, res) {
    var body = JSON.parse(bodyText);
 
   if (body.password == process.env.SECRETWEEKLY) {
-    var upload = {};
-    upload["username"] = body.username;
-    upload["initialbalance"] = body.initialbalance;
-    upload["balance"] = body.balance;
-    upload["incomecategorylist"] = body.incomecategorylist;
-    upload["expenditurecategorylist"] = body.expenditurecategorylist;
-    upload["repetitivedata"] = body.repetitivedata;
-    upload["icons"] = body.icons;
-    var d = new Date();
-    upload["savetime"] = d.getTime();
+    const body = req.body;
+      
+    const upload = {
+      username: body.username,
+      initialbalance: body.initialbalance,
+      balance: body.balance,
+      incomecategorylist: body.incomecategorylist,
+      expenditurecategorylist: body.expenditurecategorylist,
+      repetitivedata: body.repetitivedata,
+      icons: body.icons,
+      savetime: Date.now()
+    };
     console.log("FinanceBackup is uploading to db..., username: " + body.username);
+    const FinanceBackupSchema = new mongoose.Schema({
+      username: String,
+      data: Object
+    }, { collection: "FinanceBackup" });
+
+    const FinanceBackup = mongoose.model("FinanceBackup", FinanceBackupSchema);
     mongoose.connect(uri, {
       socketTimeoutMS: 0,
-      keepAlive: true,
-      useNewUrlParser: true,
-      useUnifiedTopology: true
     });
-    var db = mongoose.connection.collection("FinanceBackup");
-        db.find({ username: body.username }, function (err, data) {
-          data.toArray(function (err2, items) {
-            var count = items.length;
-            for (var i = 0; i < count; i++) {
-              db.removeMany({ _id: items[i]._id });
-            }
-          });
-        });
-        db.insertOne(upload).then(function(){console.log("finance data inserted")}).catch(function(err){console.log("Error inserting finance data to db!" + err)});   
-    
+      
+    await FinanceBackup.deleteMany({ username: body.username });
+    await FinanceBackup.create(upload);
+      
     res.end("success");
   } else {
     console.log("Wrong password in /financebackup !");
