@@ -200,16 +200,12 @@ app.post("/getfinancebackup", function(req, res){
         var username = body.username;
         var db = ConnectToDB("FinanceBackup");
         console.log("Fetching FinanceBackup data for user " + username);
-        db.find({username: body.username}, function(err, data) {
-            data.toArray(function(err2, items) {
-              items.sort(function(a, b){
-                     if (a.savetime > b.savetime)
-                        return -1;
-                    else return 1;
-                     })
-          res.send(JSON.stringify(items[0]));
-        })
-      })
+       db.find({ username: body.username }).toArray(function(err, items) {
+        
+        if (err) return res.send("DB error");
+        items.sort((a, b) => b.savetime - a.savetime);
+        res.send(JSON.stringify(items[0]));
+    });
     } else {
       console.log("Wrong password in /getfinancebackup !");
       res.send("Rossz jelszó");
