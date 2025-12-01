@@ -237,9 +237,6 @@ app.post("/financebackupnew", function (req, res) {
     console.log("FinanceBackup is uploading to db..., username: " + body.username);
     mongoose.connect(uri, {
       socketTimeoutMS: 0,
-      keepAlive: true,
-      useNewUrlParser: true,
-      useUnifiedTopology: true
     });
     var db = mongoose.connection.collection("FinanceBackup");
         db.find({ username: body.username }, function (err, data) {
