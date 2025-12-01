@@ -20,9 +20,6 @@ var uri = "mongodb://mongodb:" + process.env.PASS + "@szantog82-shard-00-00.1dml
 var ConnectToDB = function(collectionName){
   mongoose.connect(uri, {
             socketTimeoutMS: 0,
-            keepAlive: true,
-            useNewUrlParser: true,
-            useUnifiedTopology: true
         });
         var db = mongoose.connection.collection(collectionName);
   return db;
