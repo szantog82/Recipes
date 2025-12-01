@@ -14,16 +14,16 @@ app.use(bodyParser.urlencoded({
 
 app.use(express.static('public'));
 
+mongoose.connect(uri, { socketTimeoutMS: 0 })
+.then(() => console.log("Mongo connected"))
+.catch(err => console.error("Mongo connection error: ", err));
+
 //var uri = "mongodb+srv://mongodb:" + process.env.PASS + "@szantog82.1dmlm.mongodb.net/szantog82?retryWrites=true&w=majority";
 var uri = "mongodb://mongodb:" + process.env.PASS + "@szantog82-shard-00-00.1dmlm.mongodb.net:27017,szantog82-shard-00-01.1dmlm.mongodb.net:27017,szantog82-shard-00-02.1dmlm.mongodb.net:27017/szantog82?ssl=true&replicaSet=atlas-zj6i4v-shard-0&authSource=admin&retryWrites=true&w=majority";
 
 var ConnectToDB = function(collectionName){
-  mongoose.connect(uri, {
-            socketTimeoutMS: 0,
-        });
-        var db = mongoose.connection.collection(collectionName);
-  return db;
-}
+    return mongoose.connection.collection(collectionName);
+};
 
 var recipeSchema = mongoose.Schema({
     name: String,
@@ -197,12 +197,12 @@ app.post("/getfinancebackup", function(req, res){
         var username = body.username;
         var db = ConnectToDB("FinanceBackup");
         console.log("Fetching FinanceBackup data for user " + username);
-       db.find({ username: body.username }).toArray(function(err, items) {
         
-        if (err) return res.send("DB error");
-        items.sort((a, b) => b.savetime - a.savetime);
-        res.send(JSON.stringify(items[0]));
-    });
+        db.find({ username: body.username }).toArray(function(err, items) {
+            if (err) return res.send("DB error");
+            items.sort((a, b) => b.savetime - a.savetime);
+            res.send(JSON.stringify(items[0]));
+        });
     } else {
       console.log("Wrong password in /getfinancebackup !");
       res.send("Rossz jelszó");
