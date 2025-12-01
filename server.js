@@ -152,7 +152,7 @@ app.post("/setweeklymenu", function(req, res) {
     }
 });
 
-app.post("/financebackup", function (req, res) {
+app.post("/financebackup", async (req, res) => {
   console.log("FinanceBackup post action received");
   var bodyText = Object.keys(req.body)[0];
    var body = JSON.parse(bodyText);
