@@ -5,6 +5,7 @@ var mongoose = require('mongoose');
 require('mongoose-long')(mongoose);
 var Long = mongoose.Schema.Types.Long;
 var bcrypt = require('bcrypt');
+require('dotenv').config();
 
 app.use(bodyParser.urlencoded({
     parameterLimit: 100000,
@@ -14,12 +15,11 @@ app.use(bodyParser.urlencoded({
 
 app.use(express.static('public'));
 
+const uri = "mongodb://" + process.env.USERNAME + ":" + process.env.PASS + "@" + process.env.MONGODB_URL + "?ssl=true&replicaSet=atlas-zj6i4v-shard-0&authSource=admin&retryWrites=true&w=majority";
+
 mongoose.connect(uri, { socketTimeoutMS: 0 })
 .then(() => console.log("Mongo connected"))
 .catch(err => console.error("Mongo connection error: ", err));
-
-//var uri = "mongodb+srv://mongodb:" + process.env.PASS + "@szantog82.1dmlm.mongodb.net/szantog82?retryWrites=true&w=majority";
-var uri = "mongodb://mongodb:" + process.env.PASS + "@szantog82-shard-00-00.1dmlm.mongodb.net:27017,szantog82-shard-00-01.1dmlm.mongodb.net:27017,szantog82-shard-00-02.1dmlm.mongodb.net:27017/szantog82?ssl=true&replicaSet=atlas-zj6i4v-shard-0&authSource=admin&retryWrites=true&w=majority";
 
 var ConnectToDB = function(collectionName){
     return mongoose.connection.collection(collectionName);
@@ -188,24 +188,50 @@ app.post("/financebackup", async (req, res) => {
   }
 });
 
-app.post("/getfinancebackup", function(req, res){
-  console.log("GetfinanceBackup post action received")
-    var bodyText = Object.keys(req.body)[0];
-    var body = JSON.parse(bodyText);
-  
-    if (body.password == process.env.SECRETWEEKLY) {
-        var username = body.username;
-        var db = ConnectToDB("FinanceBackup");
+app.post("/getfinancebackup", async function (req, res) {
+    console.log("GetfinanceBackup post action received")
+
+    if (Object.keys(req.body).length === 0) {
+        res.end("Missing password 1");
+
+        return;
+    }
+
+    var body = req.body;
+
+    if (!body?.password) {
+        res.send("Missing password 2");
+
+        return;
+    }
+
+    if (body.password === process.env.SECRETWEEKLY) {
+        const username = body.username;
         console.log("Fetching FinanceBackup data for user " + username);
-        
-        db.find({ username: body.username }).toArray(function(err, items) {
-            if (err) return res.send("DB error");
-            items.sort((a, b) => b.savetime - a.savetime);
-            res.send(JSON.stringify(items[0]));
-        });
+
+        try {
+            const {username} = req.body;
+            await mongoose.connect(uri, { socketTimeoutMS: 0 });
+            const db = mongoose.connection.db;
+
+            if (!db) {
+                throw new Error("Database connection not available");
+            }
+
+            const items = await db.collection('FinanceBackup')
+                .find({ username })
+                .sort({ savetime: -1 })
+                .limit(1)
+                .toArray();
+
+            res.json(items[0]);
+        } catch (err) {
+            console.error("DB error", err);
+            res.status(500).send("DB error");
+        }
     } else {
-      console.log("Wrong password in /getfinancebackup !");
-      res.send("Rossz jelszó");
+        console.log("Wrong password in /getfinancebackup !");
+        res.send("Rossz jelszó");
     }
 });
 
