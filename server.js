@@ -220,7 +220,7 @@ app.post("/getfinancebackup", async function (req, res) {
 
             const items = await db.collection('FinanceBackup')
                 .find({ username })
-                .sort({ savetime: -1 })
+                .sort({ savetime: -1, _id: -1 })
                 .limit(1)
                 .toArray();
 
